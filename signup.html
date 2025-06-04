@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Signup - Chill Chat</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #007BFF, #00BFFF);
       height: 100vh;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -25,13 +24,12 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       text-align: center;
     }
-    input[type="text"], input[type="email"], input[type="password"] {
+    input {
       width: 90%;
       padding: 10px;
       margin: 10px 0;
       border: none;
       border-radius: 8px;
-      outline: none;
     }
     button {
       padding: 10px 20px;
@@ -43,7 +41,6 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      transition: 0.3s;
     }
     button:hover {
       background: black;
@@ -62,18 +59,18 @@
 
 <div class="signup-box">
   <h2>Signup to Chill Chat</h2>
-  <input type="text" id="username" placeholder="Username" required><br>
-  <input type="email" id="email" placeholder="Email" required><br>
-  <input type="password" id="password" placeholder="Password" required><br>
+  <input type="email" id="email" placeholder="Email" /><br />
+  <input type="password" id="password" placeholder="Password" /><br />
   <button onclick="signUp()">Create Account</button>
   <a href="login.html">Already have an account? Login</a>
 </div>
 
-<!-- Firebase and logic -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
+<script>
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyCx7oJAQrXbZiC3SReDyK7kqfHsprKu-3A",
     authDomain: "chill-chat-9ac85.firebaseapp.com",
@@ -84,14 +81,15 @@
     measurementId: "G-L9EMHGCZXM"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-  window.signUp = function () {
+  function signUp() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    createUserWithEmailAndPassword(auth, email, password)
+    auth.createUserWithEmailAndPassword(email, password)
       .then(userCredential => {
         alert("Signup successful!");
         window.location.href = "login.html";
@@ -99,7 +97,7 @@
       .catch(error => {
         alert("Error: " + error.message);
       });
-  };
+  }
 </script>
 
 </body>
