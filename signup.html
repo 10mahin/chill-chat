@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup - Chill Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #007BFF, #00BFFF);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+    .signup-box {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 40px;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background: white;
+      color: #007BFF;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: black;
+      color: white;
+    }
+    a {
+      color: #00BFFF;
+      text-decoration: none;
+      font-size: 14px;
+      display: block;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="signup-box">
+  <h2>Signup to Chill Chat</h2>
+  <input type="email" id="email" placeholder="Email" /><br />
+  <input type="password" id="password" placeholder="Password" /><br />
+  <button onclick="signUp()">Create Account</button>
+  <a href="login.html">Already have an account? Login</a>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx7oJAQrXbZiC3SReDyK7kqfHsprKu-3A",
+    authDomain: "chill-chat-9ac85.firebaseapp.com",
+    projectId: "chill-chat-9ac85",
+    storageBucket: "chill-chat-9ac85.firebasestorage.app",
+    messagingSenderId: "908671885995",
+    appId: "1:908671885995:web:690f3d1aeb0c757bf60dee"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  function signUp() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(userCredential => {
+        alert("Signup successful!");
+        window.location.href = "login.html";
+      })
+      .catch(error => {
+        alert("Error: " + error.message);
+      });
+  }
+</script>
+
+</body>
+</html>
