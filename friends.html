@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Friends Chat - Chill Chat</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: #007BFF;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+    }
+    .user-list {
+      margin-top: 20px;
+    }
+    .user-item {
+      padding: 10px;
+      background: white;
+      color: #007BFF;
+      margin: 10px 0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .chat-box {
+      flex: 1;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: scroll;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin: 5px 0;
+    }
+    .input-area {
+      display: flex;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+    }
+    .input-area button {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Chill Chat</h2>
+  <p id="userEmail">Loading...</p>
+  <button onclick="logout()">Logout</button>
+  <h3>Users</h3>
+  <div class="user-list" id="userList">Loading users...</div>
+</div>
+
+<div class="chat-area">
+  <h3 id="chatWith">Select a user to chat</h3>
+  <div class="chat-box" id="chatBox"></div>
+  <div class="input-area">
+    <input type="text" id="messageInput" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx7oJAQrXbZiC3SReDyK7kqfHsprKu-3A",
+    authDomain: "chill-chat-9ac85.firebaseapp.com",
+    projectId: "chill-chat-9ac85",
+    storageBucket: "chill-chat-9ac85.appspot.com",
+    messagingSenderId: "908671885995",
+    appId: "1:908671885995:web:690f3d1aeb0c757bf60dee",
+    databaseURL: "https://chill-chat-9ac85-default-rtdb.firebaseio.com/"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  let currentUser = null;
+  let chattingWith = null;
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      document.getElementById("userEmail").textContent = user.email;
+      loadUsers();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  }
+
+  function loadUsers() {
+    db.ref("users").once("value", snapshot => {
+      const users = snapshot.val();
+      const userList = document.getElementById("userList");
+      userList.innerHTML = "";
+      for (let uid in users) {
+        if (uid !== currentUser.uid) {
+          const userDiv = document.createElement("div");
+          userDiv.className = "user-item";
+          userDiv.textContent = users[uid].email;
+          userDiv.onclick = () => openChat(uid, users[uid].email);
+          userList.appendChild(userDiv);
+        }
+      }
+    });
+    // Save current user in DB
+    db.ref("users/" + currentUser.uid).set({
+      email: currentUser.email
+    });
+  }
+
+  function openChat(otherUserId, email) {
+    chattingWith = otherUserId;
+    document.getElementById("chatWith").textContent = "Chat with " + email;
+    document.getElementById("chatBox").innerHTML = "";
+    const chatId = getChatId(currentUser.uid, otherUserId);
+
+    db.ref("chats/" + chatId).on("value", snapshot => {
+      const messages = snapshot.val();
+      const chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = "";
+      for (let key in messages) {
+        const msg = messages[key];
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "message";
+        msgDiv.textContent = msg.sender === currentUser.uid ? "You: " + msg.text : msg.text;
+        chatBox.appendChild(msgDiv);
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  }
+
+  function sendMessage() {
+    const message = document.getElementById("messageInput").value;
+    if (!message || !chattingWith) return;
+
+    const chatId = getChatId(currentUser.uid, chattingWith);
+    db.ref("chats/" + chatId).push({
+      sender: currentUser.uid,
+      text: message,
+      timestamp: Date.now()
+    });
+
+    document.getElementById("messageInput").value = "";
+  }
+
+  function getChatId(uid1, uid2) {
+    return uid1 < uid2 ? uid1 + "_" + uid2 : uid2 + "_" + uid1;
+  }
+</script>
+
+</body>
+</html>
