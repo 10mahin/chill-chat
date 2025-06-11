@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chill Chat - Main</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="font-sans bg-gray-100">
+
+<!-- Container -->
+<div class="flex h-screen w-screen">
+
+  <!-- 🔵 Sidebar -->
+  <div class="w-16 bg-blue-900 text-white flex flex-col items-center py-4 space-y-6">
+    <button title="Chat">💬</button>
+    <button title="Moments">📸</button>
+    <button title="Search">🔍</button>
+    <button title="Anonymous">🕶️</button>
+    <button title="Me">🙋</button>
+    <button title="Settings">⚙️</button>
+    <button onclick="logout()" title="Logout">🚪</button>
+  </div>
+
+  <!-- 🟦 Chat List -->
+  <div class="w-1/4 bg-white p-4 shadow-md">
+    <button class="bg-blue-600 text-white px-4 py-2 rounded mb-4 w-full">+ Create New</button>
+    <input type="text" placeholder="Search..." class="w-full p-2 border rounded mb-4" />
+    <div class="space-y-3">
+      <div class="flex items-center p-2 bg-gray-100 rounded">
+        <img src="https://via.placeholder.com/40" class="rounded-full mr-3" />
+        <span>John Doe</span>
+      </div>
+      <div class="flex items-center p-2 bg-blue-100 rounded">
+        <img src="https://via.placeholder.com/40" class="rounded-full mr-3" />
+        <span class="font-bold">Group: Devs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🟩 Chat Window -->
+  <div class="flex-1 bg-gray-50 p-4 flex flex-col">
+    <div class="bg-white p-3 shadow rounded mb-4 flex justify-between items-center">
+      <h2 class="text-lg font-semibold">John Doe</h2>
+      <span class="text-sm text-green-600">Online</span>
+    </div>
+
+    <div class="flex-1 overflow-y-auto space-y-2">
+      <div class="bg-gray-200 p-2 rounded max-w-xs">Hello! How are you?</div>
+      <div class="bg-pink-400 text-white p-2 rounded max-w-xs self-end">I'm good, thanks! 😄</div>
+      <div class="bg-gray-200 p-2 rounded max-w-xs">Let's share some docs:</div>
+      <div class="bg-white border p-2 rounded max-w-xs shadow">
+        <strong>📄 Docs 1</strong><br/>Sample document preview
+      </div>
+    </div>
+
+    <div class="mt-4 flex items-center space-x-2">
+      <input type="text" placeholder="Type a message..." class="flex-1 border p-2 rounded" />
+      <button class="text-xl">😊</button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+    </div>
+  </div>
+
+  <!-- 🟦 Right Panel - Info -->
+  <div class="w-1/4 bg-white p-4 shadow-md space-y-4">
+    <div class="text-center">
+      <img src="https://via.placeholder.com/80" class="mx-auto rounded-full mb-2" />
+      <h3 class="font-semibold">William Shoenberg</h3>
+      <p class="text-green-500 text-sm">Online</p>
+    </div>
+
+    <div>
+      <h4 class="font-semibold mb-2">⭐ Starred</h4>
+      <p class="text-sm text-gray-600">No starred messages</p>
+    </div>
+
+    <div>
+      <h4 class="font-semibold mb-2">🖼 Media</h4>
+      <p class="text-sm text-gray-600">No media shared</p>
+    </div>
+
+    <div>
+      <h4 class="font-semibold mb-2">🔗 Links</h4>
+      <p class="text-sm text-gray-600">No links shared</p>
+    </div>
+
+    <div>
+      <h4 class="font-semibold mb-2">📞 Contact Info</h4>
+      <p class="text-sm text-gray-600">+1 555-1234</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx7oJAQrXbZiC3SReDyK7kqfHsprKu-3A",
+    authDomain: "chill-chat-9ac85.firebaseapp.com",
+    projectId: "chill-chat-9ac85",
+    storageBucket: "chill-chat-9ac85.appspot.com",
+    messagingSenderId: "908671885995",
+    appId: "1:908671885995:web:690f3d1aeb0c757bf60dee"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "login.html";
+    }
+  });
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  }
+</script>
+
+</body>
+</html>
