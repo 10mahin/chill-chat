@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chill Chat - Main</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="font-sans bg-gray-100">
+
+<!-- Chat Layout Omitted for Brevity -->
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx7oJAQrXbZiC3SReDyK7kqfHsprKu-3A",
+    authDomain: "chill-chat-9ac85.firebaseapp.com",
+    databaseURL: "https://chill-chat-9ac85-default-rtdb.firebaseio.com",
+    projectId: "chill-chat-9ac85",
+    storageBucket: "chill-chat-9ac85.appspot.com",
+    messagingSenderId: "908671885995",
+    appId: "1:908671885995:web:690f3d1aeb0c757bf60dee"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      listenForMessages();
+    }
+  });
+
+  function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const text = input.value.trim();
+    if (text) {
+      db.ref("messages").push({
+        text: text,
+        sender: auth.currentUser.email,
+        timestamp: Date.now()
+      });
+      input.value = "";
+    }
+  }
+
+  function listenForMessages() {
+    const chatBox = document.getElementById("chatBox");
+    db.ref("messages").on("child_added", snapshot => {
+      const msg = snapshot.val();
+      const bubble = document.createElement("div");
+      bubble.className = "p-2 rounded max-w-xs";
+      bubble.innerText = msg.text;
+
+      if (msg.sender === auth.currentUser.email) {
+        bubble.classList.add("bg-pink-400", "text-white", "self-end");
+      } else {
+        bubble.classList.add("bg-gray-200");
+      }
+
+      chatBox.appendChild(bubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  }
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  }
+</script>
+
+</body>
+</html>
