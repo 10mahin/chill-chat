@@ -5,569 +5,586 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChillChat - Connect Freely</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
+    :root {
+      --primary: #6a11cb;
+      --secondary: #2575fc;
+      --accent: #00dbde;
+      --light: #f8f9fa;
+      --dark: #1a1a2e;
+      --gray: #718096;
+      --success: #48bb78;
+      --warning: #ecc94b;
+      --danger: #e53e3e;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --text-dark: #2d3748;
+      --text-light: #f8f9fa;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    .dark-mode {
+      --primary: #8a2be2;
+      --secondary: #4a90e2;
+      --light: #1a1a2e;
+      --dark: #f8f9fa;
+      --gray: #a0aec0;
+      --card-bg: rgba(26, 26, 46, 0.9);
+      --text-dark: #f8f9fa;
+      --text-light: #2d3748;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
     body {
-      background-color: #f0f2f5;
-      color: #333;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--text-dark);
       line-height: 1.6;
-    }
-    
-    #root {
-      max-width: 500px;
-      margin: 0 auto;
-      background: white;
       min-height: 100vh;
-      position: relative;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      overflow-x: hidden;
-    }
-    
-    /* Sign-in Page Styles */
-    .signin-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
       padding: 20px;
+      transition: var(--transition);
     }
-    
-    .signin-card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
+
+    #root {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 100%;
     }
-    
-    .app-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .app-header .logo {
-      font-size: 64px;
-      margin-bottom: 10px;
-      color: #6a11cb;
-    }
-    
-    .app-header h1 {
-      font-size: 32px;
-      color: #2d3748;
-      margin-bottom: 10px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    
-    .app-header p {
-      color: #718096;
-      font-size: 16px;
-    }
-    
-    .signin-form {
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #4a5568;
-    }
-    
-    .form-group input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-    
-    .form-group input:focus {
-      border-color: #4299e1;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-    }
-    
-    .remember {
-      display: flex;
-      align-items: center;
-    }
-    
-    .remember label {
-      margin: 0 0 0 8px;
-    }
-    
-    .signin-button {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: 10px;
-    }
-    
-    .signin-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
-    }
-    
-    .signup-link {
-      text-align: center;
-      margin-top: 20px;
-      color: #718096;
-    }
-    
-    .signup-link a {
-      color: #4299e1;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    
-    .error-message {
-      background: #fed7d7;
-      color: #e53e3e;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      text-align: center;
-    }
-    
-    /* Main App Styles */
-    .main-app {
+
+    .app-container {
       display: flex;
       flex-direction: column;
       height: 100vh;
+      background: var(--card-bg);
+      border-radius: 24px;
       overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
     }
-    
+
+    /* Header */
     .app-header {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      color: white;
-      padding: 16px 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    
-    .header-content {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--text-light);
+      padding: 18px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     }
-    
-    .header-content h1 {
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 28px;
+      background: rgba(255, 255, 255, 0.2);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .app-title {
       font-size: 22px;
       font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
-    }
-    
-    .header-icons span {
-      margin-left: 15px;
-      font-size: 20px;
       cursor: pointer;
+      font-size: 18px;
+      transition: var(--transition);
     }
-    
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(20deg);
+    }
+
+    /* Main Content */
     .app-content {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
-      background-color: #f8f9fa;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
-    
+
     .tab-content {
-      animation: fadeIn 0.3s ease-in-out;
+      flex: 1;
+      animation: fadeIn 0.4s ease-out;
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    .tab-content h2 {
-      margin-bottom: 20px;
-      color: #2d3748;
-      font-weight: 700;
-    }
-    
-    .search-bar {
+
+    /* Talks Tab */
+    .search-container {
       display: flex;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      position: relative;
     }
-    
-    .search-bar input {
+
+    .search-container input {
       flex: 1;
-      padding: 12px 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 24px 0 0 24px;
-      font-size: 16px;
-    }
-    
-    .search-bar button {
-      background: #4299e1;
-      color: white;
+      padding: 14px 20px;
+      padding-left: 50px;
       border: none;
-      border-radius: 0 24px 24px 0;
-      padding: 0 20px;
-      cursor: pointer;
+      border-radius: 30px;
+      font-size: 16px;
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-dark);
+      transition: var(--transition);
+    }
+
+    .search-container input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary);
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
       font-size: 18px;
     }
-    
+
     .chat-list {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-    
+
     .chat-item {
       display: flex;
       padding: 16px;
-      border-bottom: 1px solid #edf2f7;
+      border-radius: 18px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: var(--transition);
+      background: rgba(0, 0, 0, 0.03);
+      position: relative;
     }
-    
+
     .chat-item:hover {
-      background-color: #f7fafc;
+      background: rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
     }
-    
+
+    .chat-item.unread {
+      background: rgba(106, 17, 203, 0.08);
+    }
+
     .chat-avatar {
-      width: 50px;
-      height: 50px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      background: linear-gradient(45deg, var(--primary), var(--accent));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      margin-right: 15px;
       color: white;
+      font-weight: bold;
+      margin-right: 16px;
+      position: relative;
     }
-    
+
+    .online-status {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--success);
+      border: 2px solid white;
+    }
+
     .chat-info {
       flex: 1;
       min-width: 0;
     }
-    
+
     .chat-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
-    
-    .chat-header h3 {
-      font-size: 16px;
+
+    .chat-name {
+      font-size: 17px;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    
+
     .chat-time {
-      font-size: 12px;
-      color: #a0aec0;
+      font-size: 13px;
+      color: var(--gray);
     }
-    
+
     .chat-preview {
-      font-size: 14px;
-      color: #718096;
+      font-size: 15px;
+      color: var(--gray);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    
+
     .unread-count {
-      background: #4299e1;
+      background: var(--primary);
       color: white;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      width: 24px;
+      min-width: 24px;
       height: 24px;
-      border-radius: 50%;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-left: 10px;
+      align-self: center;
+      padding: 0 8px;
     }
-    
-    /* Moments tab */
+
+    /* Moments Tab */
     .moments-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
       margin-top: 20px;
     }
-    
+
     .moment-item {
       background: white;
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      aspect-ratio: 1/1;
     }
-    
+
+    .moment-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
     .moment-image {
-      height: 150px;
+      height: 75%;
       background: linear-gradient(45deg, #ff9a9e, #fad0c4);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 24px;
+      font-size: 32px;
     }
-    
+
     .moment-meta {
-      padding: 10px;
+      padding: 12px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+    }
+
+    .moment-user {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .moment-time {
       font-size: 12px;
-      color: #718096;
+      color: var(--gray);
     }
-    
-    /* Search tab */
-    .search-container {
-      display: flex;
-      margin-bottom: 30px;
-    }
-    
-    .search-container input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 24px 0 0 24px;
-      font-size: 16px;
-    }
-    
-    .search-container button {
-      background: #4299e1;
-      color: white;
-      border: none;
-      border-radius: 0 24px 24px 0;
-      padding: 0 20px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    
+
+    /* Search Tab */
     .recent-searches h3 {
-      margin-bottom: 15px;
+      margin: 24px 0 16px;
       font-size: 18px;
     }
-    
-    .recent-searches ul {
+
+    .search-list {
       list-style: none;
-      background: white;
-      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    
-    .recent-searches li {
-      padding: 15px 20px;
-      border-bottom: 1px solid #edf2f7;
+
+    .search-item {
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       font-size: 16px;
       display: flex;
       align-items: center;
+      transition: var(--transition);
     }
-    
-    .recent-searches li i {
-      margin-right: 10px;
-      color: #718096;
+
+    .search-item:hover {
+      background: rgba(0, 0, 0, 0.06);
     }
-    
-    .recent-searches li:last-child {
-      border-bottom: none;
+
+    .search-item i {
+      margin-right: 15px;
+      color: var(--primary);
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
     }
-    
-    /* Anonymous tab */
-    .anonymous-status {
+
+    /* Anonymous Tab */
+    .anonymous-container {
       display: flex;
-      justify-content: center;
-      margin: 30px 0;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
     }
-    
+
     .status-indicator {
-      width: 100px;
-      height: 100px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      background: #e2e8f0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
+      margin: 0 auto 30px;
       position: relative;
+      box-shadow: 0 10px 30px rgba(106, 17, 203, 0.3);
     }
-    
-    .status-indicator.active {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    }
-    
+
     .status-indicator i {
-      font-size: 40px;
-      color: #718096;
-    }
-    
-    .status-indicator.active i {
+      font-size: 60px;
       color: white;
     }
-    
+
+    .status-text {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+
+    .status-description {
+      font-size: 16px;
+      color: var(--gray);
+      max-width: 400px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
     .start-chat-button {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       border: none;
-      padding: 14px 30px;
-      border-radius: 24px;
-      font-size: 16px;
+      padding: 16px 40px;
+      border-radius: 30px;
+      font-size: 17px;
       font-weight: 600;
       cursor: pointer;
-      display: block;
-      margin: 30px auto 0;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: var(--transition);
+      box-shadow: 0 6px 20px rgba(106, 17, 203, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    
+
     .start-chat-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(106, 17, 203, 0.4);
     }
-    
-    /* Me tab */
+
+    /* Me Tab */
     .profile-header {
       display: flex;
       align-items: center;
       margin-bottom: 30px;
+      gap: 20px;
     }
-    
+
     .profile-avatar {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      background: linear-gradient(45deg, var(--primary), var(--accent));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
-      margin-right: 20px;
+      font-size: 40px;
       color: white;
+      font-weight: bold;
+      flex-shrink: 0;
     }
-    
+
     .profile-info h2 {
-      margin-bottom: 5px;
-      font-size: 22px;
-    }
-    
-    .profile-info p {
-      color: #48bb78;
-      font-weight: 500;
-    }
-    
-    .profile-stats {
-      display: flex;
-      justify-content: space-around;
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    
-    .stat {
-      text-align: center;
-    }
-    
-    .stat strong {
-      display: block;
+      margin-bottom: 8px;
       font-size: 24px;
-      color: #2d3748;
     }
-    
-    .stat span {
-      font-size: 14px;
-      color: #718096;
-    }
-    
-    .profile-menu {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    
-    .menu-item {
-      padding: 18px 20px;
+
+    .profile-status {
       display: flex;
       align-items: center;
-      font-size: 16px;
-      border-bottom: 1px solid #edf2f7;
+      gap: 8px;
+      color: var(--success);
+      font-weight: 500;
     }
-    
-    .menu-item:last-child {
-      border-bottom: none;
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
     }
-    
-    .menu-item i {
-      margin-right: 15px;
-      font-size: 20px;
-      color: #6a11cb;
-      width: 24px;
-      text-align: center;
-    }
-    
-    .learn-section {
-      background: white;
-      border-radius: 12px;
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: var(--transition);
     }
-    
+
+    .stat-card:hover {
+      background: rgba(0, 0, 0, 0.06);
+      transform: translateY(-3px);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .profile-menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .menu-item {
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: rgba(0, 0, 0, 0.06);
+      transform: translateY(-3px);
+    }
+
+    .menu-item i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .menu-item span {
+      font-size: 15px;
+      font-weight: 500;
+      display: block;
+    }
+
+    .learn-section {
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
     .anonymous-toggle {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin: 20px 0 10px;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 16px 20px;
+      border-radius: 16px;
     }
-    
-    .toggle-description {
-      font-size: 14px;
-      color: #718096;
-      margin-top: 10px;
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
+      font-weight: 500;
     }
-    
+
+    .toggle-label i {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
     .toggle-switch {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 24px;
+      width: 60px;
+      height: 30px;
     }
-    
+
     .toggle-switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    
+
     .slider {
       position: absolute;
       cursor: pointer;
@@ -575,44 +592,53 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #ccc;
+      background: #ccc;
       transition: .4s;
-      border-radius: 24px;
+      border-radius: 34px;
     }
-    
+
     .slider:before {
       position: absolute;
       content: "";
-      height: 16px;
-      width: 16px;
+      height: 22px;
+      width: 22px;
       left: 4px;
       bottom: 4px;
-      background-color: white;
+      background: white;
       transition: .4s;
       border-radius: 50%;
     }
-    
+
     input:checked + .slider {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
     }
-    
+
     input:checked + .slider:before {
-      transform: translateX(26px);
+      transform: translateX(30px);
     }
-    
+
+    .toggle-description {
+      font-size: 15px;
+      color: var(--gray);
+      margin-top: 10px;
+      line-height: 1.6;
+      padding: 0 10px;
+    }
+
     /* Bottom Navigation */
     .bottom-nav {
       display: flex;
       justify-content: space-around;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      padding: 10px 0;
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      background: var(--card-bg);
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 12px 0;
+      box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
       position: sticky;
       bottom: 0;
       z-index: 10;
+      backdrop-filter: blur(10px);
     }
-    
+
     .nav-item {
       display: flex;
       flex-direction: column;
@@ -620,50 +646,99 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: #a0aec0;
+      color: var(--gray);
       font-size: 12px;
       padding: 8px 12px;
-      transition: color 0.3s;
-      min-width: 60px;
+      transition: var(--transition);
+      min-width: 70px;
+      border-radius: 16px;
     }
-    
+
     .nav-item.active {
-      color: #6a11cb;
+      color: var(--primary);
+      background: rgba(106, 17, 203, 0.1);
+      transform: translateY(-5px);
     }
-    
+
+    .nav-item.active .nav-icon {
+      transform: scale(1.15);
+    }
+
     .nav-icon {
       font-size: 22px;
       margin-bottom: 4px;
+      transition: var(--transition);
     }
-    
+
     /* Responsive adjustments */
-    @media (max-width: 480px) {
-      #root {
-        max-width: 100%;
+    @media (min-width: 768px) {
+      body {
+        padding: 40px;
       }
       
-      .signin-card {
-        padding: 20px;
+      .app-container {
+        height: 90vh;
+        max-height: 900px;
       }
       
-      .app-header .logo {
-        font-size: 48px;
+      .app-header {
+        padding: 20px 40px;
       }
       
-      .app-header h1 {
+      .app-content {
+        padding: 30px 40px;
+      }
+      
+      .moments-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+      .profile-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .profile-menu {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+      .bottom-nav {
+        padding: 15px 0;
+      }
+      
+      .nav-item {
+        min-width: 80px;
+        font-size: 13px;
+      }
+      
+      .nav-icon {
         font-size: 24px;
       }
-      
-      .chat-avatar {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
+    }
+
+    @media (min-width: 1024px) {
+      .app-container {
+        flex-direction: row;
+        height: 85vh;
       }
       
-      .profile-avatar {
-        width: 70px;
-        height: 70px;
-        font-size: 30px;
+      .app-content {
+        width: 75%;
+      }
+      
+      .bottom-nav {
+        flex-direction: column;
+        width: 25%;
+        max-width: 100px;
+        border-top: none;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 30px 0;
+        justify-content: flex-start;
+        gap: 30px;
+      }
+      
+      .nav-item {
+        min-width: auto;
+        padding: 15px;
       }
     }
   </style>
@@ -672,17 +747,30 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState } = React;
+    const { useState, useEffect } = React;
 
     function App() {
       const [isLoggedIn, setIsLoggedIn] = useState(false);
+      const [darkMode, setDarkMode] = useState(false);
+      
+      useEffect(() => {
+        if (darkMode) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+      }, [darkMode]);
       
       return (
-        <div className="app">
+        <div className="app-container">
           {!isLoggedIn ? (
             <SignInPage onLogin={() => setIsLoggedIn(true)} />
           ) : (
-            <MainApp onLogout={() => setIsLoggedIn(false)} />
+            <MainApp 
+              onLogout={() => setIsLoggedIn(false)} 
+              darkMode={darkMode}
+              toggleDarkMode={() => setDarkMode(!darkMode)}
+            />
           )}
         </div>
       );
@@ -693,6 +781,7 @@
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
       const [remember, setRemember] = useState(false);
+      const [loading, setLoading] = useState(false);
 
       const handleSubmit = (e) => {
         e.preventDefault();
@@ -708,115 +797,193 @@
           return;
         }
         
-        // Successful login
-        onLogin();
+        // Simulate login process
+        setLoading(true);
+        setError('');
+        
+        setTimeout(() => {
+          setLoading(false);
+          onLogin();
+        }, 1500);
       };
 
       return (
-        <div className="signin-container">
-          <div className="signin-card">
-            <div className="app-header">
+        <>
+          <div className="app-header">
+            <div className="logo-container">
               <div className="logo">
                 <i className="fas fa-comment-dots"></i>
               </div>
-              <h1>ChillChat</h1>
-              <p>Connect with friends and the world around you</p>
+              <h1 className="app-title">ChillChat</h1>
+            </div>
+          </div>
+          
+          <div className="app-content">
+            <div style={{textAlign: 'center', margin: '40px 0 30px'}}>
+              <div className="logo" style={{margin: '0 auto 20px', fontSize: '40px'}}>
+                <i className="fas fa-comment-dots"></i>
+              </div>
+              <h1 style={{fontSize: '32px', marginBottom: '10px'}}>Welcome Back</h1>
+              <p style={{color: 'var(--gray)', maxWidth: '400px', margin: '0 auto'}}>
+                Sign in to continue your conversations and connect with friends
+              </p>
             </div>
             
             <form onSubmit={handleSubmit} className="signin-form">
-              {error && <div className="error-message">{error}</div>}
+              {error && (
+                <div className="error-message" style={{
+                  background: 'var(--danger)',
+                  color: 'white',
+                  padding: '15px',
+                  borderRadius: '12px',
+                  marginBottom: '20px',
+                  textAlign: 'center'
+                }}>
+                  {error}
+                </div>
+              )}
               
               <div className="form-group">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username" style={{display: 'block', marginBottom: '8px', fontWeight: '600'}}>Username</label>
                 <input
                   type="text"
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
+                  style={{
+                    width: '100%',
+                    padding: '16px 20px',
+                    border: 'none',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    background: 'rgba(0, 0, 0, 0.05)'
+                  }}
                 />
               </div>
               
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password" style={{display: 'block', marginBottom: '8px', fontWeight: '600'}}>Password</label>
                 <input
                   type="password"
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
+                  style={{
+                    width: '100%',
+                    padding: '16px 20px',
+                    border: 'none',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    background: 'rgba(0, 0, 0, 0.05)'
+                  }}
                 />
               </div>
               
-              <div className="form-group remember">
+              <div className="form-group remember" style={{display: 'flex', alignItems: 'center'}}>
                 <input 
                   type="checkbox" 
                   id="remember" 
                   checked={remember} 
-                  onChange={() => setRemember(!remember)} 
+                  onChange={() => setRemember(!remember)}
+                  style={{marginRight: '10px'}}
                 />
                 <label htmlFor="remember">Remember me</label>
               </div>
               
-              <button type="submit" className="signin-button">Sign In</button>
+              <button 
+                type="submit" 
+                className="signin-button" 
+                style={{
+                  background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                  color: 'white',
+                  border: 'none',
+                  padding: '16px',
+                  borderRadius: '14px',
+                  fontSize: '17px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  marginTop: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px'
+                }}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i> Signing In...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
               
-              <div className="signup-link">
-                Don't have an account? <a href="#">Sign Up</a>
+              <div className="signup-link" style={{textAlign: 'center', marginTop: '20px', color: 'var(--gray)'}}>
+                Don't have an account? <a href="#" style={{color: 'var(--primary)', textDecoration: 'none', fontWeight: '600'}}>Sign Up</a>
               </div>
             </form>
           </div>
-        </div>
+        </>
       );
     }
 
-    function MainApp({ onLogout }) {
+    function MainApp({ onLogout, darkMode, toggleDarkMode }) {
       const [activeTab, setActiveTab] = useState('talks');
       const [anonymousMode, setAnonymousMode] = useState(false);
       
       // Sample chat data
       const chats = [
-        { id: 1, name: 'Alex Johnson', lastMessage: 'Hey, how are you doing?', time: '10:30 AM', unread: 2, avatar: 'AJ' },
-        { id: 2, name: 'Sarah Williams', lastMessage: 'Are we meeting tomorrow?', time: '9:15 AM', unread: 0, avatar: 'SW' },
-        { id: 3, name: 'Mike Chen', lastMessage: 'Sent you the document', time: 'Yesterday', unread: 5, avatar: 'MC' },
-        { id: 4, name: 'Design Team', lastMessage: 'Emily: Final design approved!', time: 'Yesterday', unread: 0, avatar: 'DT' },
-        { id: 5, name: 'Mom', lastMessage: 'Call me when you can', time: 'Mon', unread: 1, avatar: 'M' },
-        { id: 6, name: 'Tech Support', lastMessage: 'Your issue has been resolved', time: 'Sun', unread: 0, avatar: 'TS' },
-        { id: 7, name: 'David Wilson', lastMessage: 'Party at my place this weekend!', time: 'Sat', unread: 3, avatar: 'DW' },
-        { id: 8, name: 'Emma Thompson', lastMessage: 'Thanks for your help!', time: 'Fri', unread: 0, avatar: 'ET' },
+        { id: 1, name: 'Alex Johnson', lastMessage: 'Hey, how are you doing?', time: '10:30 AM', unread: 2, avatar: 'AJ', online: true },
+        { id: 2, name: 'Sarah Williams', lastMessage: 'Are we meeting tomorrow?', time: '9:15 AM', unread: 0, avatar: 'SW', online: true },
+        { id: 3, name: 'Mike Chen', lastMessage: 'Sent you the document', time: 'Yesterday', unread: 5, avatar: 'MC', online: false },
+        { id: 4, name: 'Design Team', lastMessage: 'Emily: Final design approved!', time: 'Yesterday', unread: 0, avatar: 'DT', online: true },
+        { id: 5, name: 'Mom', lastMessage: 'Call me when you can', time: 'Mon', unread: 1, avatar: 'M', online: true },
+        { id: 6, name: 'Tech Support', lastMessage: 'Your issue has been resolved', time: 'Sun', unread: 0, avatar: 'TS', online: false },
+        { id: 7, name: 'David Wilson', lastMessage: 'Party at my place this weekend!', time: 'Sat', unread: 3, avatar: 'DW', online: true },
+        { id: 8, name: 'Emma Thompson', lastMessage: 'Thanks for your help!', time: 'Fri', unread: 0, avatar: 'ET', online: false },
       ];
 
       return (
-        <div className="main-app">
-          {/* Header */}
-          <header className="app-header">
-            <div className="header-content">
-              <h1>ChillChat</h1>
-              <div className="header-icons">
-                <span><i className="fas fa-bell"></i></span>
-                <span><i className="fas fa-cog"></i></span>
+        <>
+          <div className="app-header">
+            <div className="logo-container">
+              <div className="logo">
+                <i className="fas fa-comment-dots"></i>
               </div>
+              <h1 className="app-title">ChillChat</h1>
             </div>
-          </header>
+            
+            <div className="header-actions">
+              <button className="theme-toggle" onClick={toggleDarkMode}>
+                {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
+              </button>
+            </div>
+          </div>
           
-          {/* Main Content */}
-          <main className="app-content">
+          <div className="app-content">
             {activeTab === 'talks' && (
-              <div className="talks-container">
-                <div className="search-bar">
+              <div className="tab-content">
+                <div className="search-container">
+                  <i className="fas fa-search search-icon"></i>
                   <input type="text" placeholder="Search messages..." />
-                  <button><i className="fas fa-search"></i></button>
                 </div>
                 
                 <div className="chat-list">
                   {chats.map(chat => (
-                    <div key={chat.id} className="chat-item">
-                      <div className="chat-avatar">{chat.avatar}</div>
+                    <div key={chat.id} className={`chat-item ${chat.unread > 0 ? 'unread' : ''}`}>
+                      <div className="chat-avatar">
+                        {chat.avatar}
+                        {chat.online && <div className="online-status"></div>}
+                      </div>
                       <div className="chat-info">
                         <div className="chat-header">
-                          <h3>{chat.name}</h3>
-                          <span className="chat-time">{chat.time}</span>
+                          <div className="chat-name">{chat.name}</div>
+                          <div className="chat-time">{chat.time}</div>
                         </div>
-                        <p className="chat-preview">{chat.lastMessage}</p>
+                        <div className="chat-preview">{chat.lastMessage}</div>
                       </div>
                       {chat.unread > 0 && (
                         <div className="unread-count">{chat.unread}</div>
@@ -832,14 +999,14 @@
                 <h2>Moments</h2>
                 <p>Share photos and updates with your friends</p>
                 <div className="moments-grid">
-                  {[1, 2, 3, 4, 5, 6].map(i => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
                     <div key={i} className="moment-item">
                       <div className="moment-image">
                         <i className="fas fa-image"></i>
                       </div>
                       <div className="moment-meta">
-                        <span>Friend {i}</span>
-                        <span>2 hrs ago</span>
+                        <div className="moment-user">Friend {i}</div>
+                        <div className="moment-time">{i * 2} hrs ago</div>
                       </div>
                     </div>
                   ))}
@@ -851,15 +1018,27 @@
               <div className="tab-content">
                 <h2>Search</h2>
                 <div className="search-container">
+                  <i className="fas fa-search search-icon"></i>
                   <input type="text" placeholder="Search people, groups, messages..." />
-                  <button><i className="fas fa-search"></i></button>
                 </div>
                 <div className="recent-searches">
                   <h3>Recent Searches</h3>
-                  <ul>
-                    <li><i className="fas fa-user"></i> Alex Johnson</li>
-                    <li><i className="fas fa-users"></i> Design Team</li>
-                    <li><i className="fas fa-hashtag"></i> Vacation Plans</li>
+                  <ul className="search-list">
+                    <li className="search-item">
+                      <i className="fas fa-user"></i> Alex Johnson
+                    </li>
+                    <li className="search-item">
+                      <i className="fas fa-users"></i> Design Team
+                    </li>
+                    <li className="search-item">
+                      <i className="fas fa-hashtag"></i> Vacation Plans
+                    </li>
+                    <li className="search-item">
+                      <i className="fas fa-user"></i> Mike Chen
+                    </li>
+                    <li className="search-item">
+                      <i className="fas fa-image"></i> Beach Photos
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -867,28 +1046,22 @@
             
             {activeTab === 'anonymous' && (
               <div className="tab-content">
-                <h2>Anonymous Chat</h2>
-                <div className="anonymous-status">
-                  {anonymousMode ? (
-                    <div className="active-mode">
-                      <div className="status-indicator active">
-                        <i className="fas fa-user-secret"></i>
-                      </div>
-                      <p>You are chatting anonymously</p>
-                    </div>
-                  ) : (
-                    <div className="inactive-mode">
-                      <div className="status-indicator">
-                        <i className="fas fa-user"></i>
-                      </div>
-                      <p>Anonymous mode is off</p>
-                    </div>
-                  )}
+                <div className="anonymous-container">
+                  <div className="status-indicator">
+                    <i className="fas fa-user-secret"></i>
+                  </div>
+                  <div className="status-text">
+                    {anonymousMode ? "You're Anonymous" : "Anonymous Mode"}
+                  </div>
+                  <div className="status-description">
+                    {anonymousMode 
+                      ? "You can now chat without revealing your identity. Your privacy is protected." 
+                      : "Turn on anonymous mode to chat without revealing your identity to others."}
+                  </div>
+                  <button className="start-chat-button" onClick={() => setAnonymousMode(!anonymousMode)}>
+                    {anonymousMode ? <><i className="fas fa-sync"></i> Change Identity</> : <><i className="fas fa-lock"></i> Go Anonymous</>}
+                  </button>
                 </div>
-                <p>Start a private conversation without revealing your identity.</p>
-                <button className="start-chat-button">
-                  {anonymousMode ? 'Find New Chat' : 'Start Anonymous Chat'}
-                </button>
               </div>
             )}
             
@@ -898,50 +1071,71 @@
                   <div className="profile-avatar">JD</div>
                   <div className="profile-info">
                     <h2>John Doe</h2>
-                    <p><i className="fas fa-circle" style={{fontSize: '10px', color: '#48bb78'}}></i> Online now</p>
+                    <div className="profile-status">
+                      <i className="fas fa-circle"></i> Online now
+                    </div>
                   </div>
                 </div>
                 
                 <div className="profile-stats">
-                  <div className="stat">
-                    <strong>42</strong>
-                    <span>Friends</span>
+                  <div className="stat-card">
+                    <div className="stat-value">42</div>
+                    <div className="stat-label">Friends</div>
                   </div>
-                  <div className="stat">
-                    <strong>128</strong>
-                    <span>Chats</span>
+                  <div className="stat-card">
+                    <div className="stat-value">128</div>
+                    <div className="stat-label">Chats</div>
                   </div>
-                  <div className="stat">
-                    <strong>24</strong>
-                    <span>Moments</span>
+                  <div className="stat-card">
+                    <div className="stat-value">24</div>
+                    <div className="stat-label">Moments</div>
                   </div>
                 </div>
                 
                 <div className="profile-menu">
                   <div className="menu-item">
-                    <i className="fas fa-user-circle"></i> My Account
+                    <i className="fas fa-user-circle"></i>
+                    <span>My Account</span>
                   </div>
                   <div className="menu-item">
-                    <i className="fas fa-users"></i> Friends
+                    <i className="fas fa-users"></i>
+                    <span>Friends</span>
                   </div>
                   <div className="menu-item">
-                    <i className="fas fa-bell"></i> Notifications
+                    <i className="fas fa-bell"></i>
+                    <span>Notifications</span>
                   </div>
                   <div className="menu-item">
-                    <i className="fas fa-lock"></i> Privacy
+                    <i className="fas fa-lock"></i>
+                    <span>Privacy</span>
                   </div>
                   <div className="menu-item">
-                    <i className="fas fa-book"></i> Learn
+                    <i className="fas fa-cog"></i>
+                    <span>Settings</span>
                   </div>
                   <div className="menu-item">
-                    <i className="fas fa-question-circle"></i> Help & Support
+                    <i className="fas fa-moon"></i>
+                    <span>Dark Mode</span>
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-question-circle"></i>
+                    <span>Help Center</span>
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                   </div>
                 </div>
                 
                 <div className="learn-section">
-                  <h3>Learn</h3>
+                  <h3 className="section-title">
+                    <i className="fas fa-graduation-cap"></i> Learn
+                  </h3>
                   <div className="anonymous-toggle">
-                    <span>Anonymous Chat</span>
+                    <div className="toggle-label">
+                      <i className="fas fa-user-secret"></i>
+                      <span>Anonymous Chat</span>
+                    </div>
                     <label className="toggle-switch">
                       <input 
                         type="checkbox" 
@@ -951,17 +1145,16 @@
                       <span className="slider"></span>
                     </label>
                   </div>
-                  <p className="toggle-description">
+                  <div className="toggle-description">
                     {anonymousMode 
-                      ? "You can chat anonymously with other users" 
-                      : "Turn on to chat without revealing your identity"}
-                  </p>
+                      ? "You're currently in anonymous mode. Your identity is hidden in all new chats. You can turn this off at any time." 
+                      : "When enabled, your identity will be hidden in new chats. Your existing contacts will still see your identity."}
+                  </div>
                 </div>
               </div>
             )}
-          </main>
+          </div>
           
-          {/* Bottom Navigation */}
           <nav className="bottom-nav">
             <button 
               className={`nav-item ${activeTab === 'talks' ? 'active' : ''}`}
@@ -1003,7 +1196,7 @@
               <span className="nav-label">Me</span>
             </button>
           </nav>
-        </div>
+        </>
       );
     }
 
