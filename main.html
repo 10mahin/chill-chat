@@ -1,953 +1,1014 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-
-// App component
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  return (
-    <Router>
-      <div className="app">
-        <Routes>
-          <Route path="/" element={
-            isLoggedIn ? 
-            <Navigate to="/main/talks" /> : 
-            <SignInPage onLogin={() => setIsLoggedIn(true)} />
-          } />
-          <Route path="/main/*" element={
-            isLoggedIn ? 
-            <MainApp /> : 
-            <Navigate to="/" />
-          } />
-        </Routes>
-      </div>
-    </Router>
-  );
-}
-
-// Sign-in Page
-function SignInPage({ onLogin }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Simple validation
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChillChat - Connect Freely</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
+    body {
+      background-color: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
     }
     
-    // Successful login
-    onLogin();
-    navigate('/main/talks');
-  };
-
-  return (
-    <div className="signin-container">
-      <div className="signin-card">
-        <div className="app-header">
-          <div className="logo">💬</div>
-          <h1>ChillChat</h1>
-          <p>Connect with friends and the world around you</p>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="signin-form">
-          {error && <div className="error-message">{error}</div>}
-          
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-            />
-          </div>
-          
-          <div className="form-group remember">
-            <input type="checkbox" id="remember" />
-            <label htmlFor="remember">Remember me</label>
-          </div>
-          
-          <button type="submit" className="signin-button">Sign In</button>
-          
-          <div className="signup-link">
-            Don't have an account? <a href="#">Sign Up</a>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// Main Application Component
-function MainApp() {
-  const [activeTab, setActiveTab] = useState('talks');
-  const [anonymousMode, setAnonymousMode] = useState(false);
-  
-  // Sample chat data
-  const chats = [
-    { id: 1, name: 'Alex Johnson', lastMessage: 'Hey, how are you doing?', time: '10:30 AM', unread: 2, avatar: '👨‍💼' },
-    { id: 2, name: 'Sarah Williams', lastMessage: 'Are we meeting tomorrow?', time: '9:15 AM', unread: 0, avatar: '👩‍⚕️' },
-    { id: 3, name: 'Mike Chen', lastMessage: 'Sent you the document', time: 'Yesterday', unread: 5, avatar: '👨‍💻' },
-    { id: 4, name: 'Design Team', lastMessage: 'Emily: Final design approved!', time: 'Yesterday', unread: 0, avatar: '👥' },
-    { id: 5, name: 'Mom', lastMessage: 'Call me when you can', time: 'Mon', unread: 1, avatar: '👩' },
-    { id: 6, name: 'Tech Support', lastMessage: 'Your issue has been resolved', time: 'Sun', unread: 0, avatar: '👨‍🔧' },
-    { id: 7, name: 'David Wilson', lastMessage: 'Party at my place this weekend!', time: 'Sat', unread: 3, avatar: '👨‍🎤' },
-    { id: 8, name: 'Emma Thompson', lastMessage: 'Thanks for your help!', time: 'Fri', unread: 0, avatar: '👩‍🎨' },
-  ];
-
-  return (
-    <div className="main-app">
-      {/* Header */}
-      <header className="app-header">
-        <div className="header-content">
-          <h1>ChillChat</h1>
-          <div className="header-icons">
-            <span>🔔</span>
-            <span>⚙️</span>
-          </div>
-        </div>
-      </header>
-      
-      {/* Main Content */}
-      <main className="app-content">
-        {activeTab === 'talks' && (
-          <div className="talks-container">
-            <div className="search-bar">
-              <input type="text" placeholder="Search messages..." />
-              <button>🔍</button>
-            </div>
-            
-            <div className="chat-list">
-              {chats.map(chat => (
-                <div key={chat.id} className="chat-item">
-                  <div className="chat-avatar">{chat.avatar}</div>
-                  <div className="chat-info">
-                    <div className="chat-header">
-                      <h3>{chat.name}</h3>
-                      <span className="chat-time">{chat.time}</span>
-                    </div>
-                    <p className="chat-preview">{chat.lastMessage}</p>
-                  </div>
-                  {chat.unread > 0 && (
-                    <div className="unread-count">{chat.unread}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {activeTab === 'moments' && (
-          <div className="tab-content">
-            <h2>Moments</h2>
-            <p>Share photos and updates with your friends</p>
-            <div className="moments-grid">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="moment-item">
-                  <div className="moment-image"></div>
-                  <div className="moment-meta">
-                    <span>Friend {i}</span>
-                    <span>2 hrs ago</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {activeTab === 'search' && (
-          <div className="tab-content">
-            <h2>Search</h2>
-            <div className="search-container">
-              <input type="text" placeholder="Search people, groups, messages..." />
-              <button>🔍</button>
-            </div>
-            <div className="recent-searches">
-              <h3>Recent Searches</h3>
-              <ul>
-                <li>Alex Johnson</li>
-                <li>Design Team</li>
-                <li>Vacation Plans</li>
-              </ul>
-            </div>
-          </div>
-        )}
-        
-        {activeTab === 'anonymous' && (
-          <div className="tab-content">
-            <h2>Anonymous Chat</h2>
-            <div className="anonymous-status">
-              {anonymousMode ? (
-                <div className="active-mode">
-                  <div className="status-indicator active"></div>
-                  <p>You are chatting anonymously</p>
-                </div>
-              ) : (
-                <div className="inactive-mode">
-                  <div className="status-indicator"></div>
-                  <p>Anonymous mode is off</p>
-                </div>
-              )}
-            </div>
-            <p>Start a private conversation without revealing your identity.</p>
-            <button className="start-chat-button">
-              {anonymousMode ? 'Find New Chat' : 'Start Anonymous Chat'}
-            </button>
-          </div>
-        )}
-        
-        {activeTab === 'me' && (
-          <div className="tab-content">
-            <div className="profile-header">
-              <div className="profile-avatar">👤</div>
-              <div className="profile-info">
-                <h2>John Doe</h2>
-                <p>Online now</p>
-              </div>
-            </div>
-            
-            <div className="profile-stats">
-              <div className="stat">
-                <strong>42</strong>
-                <span>Friends</span>
-              </div>
-              <div className="stat">
-                <strong>128</strong>
-                <span>Chats</span>
-              </div>
-              <div className="stat">
-                <strong>24</strong>
-                <span>Moments</span>
-              </div>
-            </div>
-            
-            <div className="profile-menu">
-              <div className="menu-item">
-                <span>⭐</span> My Account
-              </div>
-              <div className="menu-item">
-                <span>👥</span> Friends
-              </div>
-              <div className="menu-item">
-                <span>🔔</span> Notifications
-              </div>
-              <div className="menu-item">
-                <span>🔒</span> Privacy
-              </div>
-              <div className="menu-item">
-                <span>📚</span> Learn
-              </div>
-              <div className="menu-item">
-                <span>❓</span> Help & Support
-              </div>
-            </div>
-            
-            <div className="learn-section">
-              <h3>Learn</h3>
-              <div className="anonymous-toggle">
-                <span>Anonymous Chat</span>
-                <label className="toggle-switch">
-                  <input 
-                    type="checkbox" 
-                    checked={anonymousMode} 
-                    onChange={() => setAnonymousMode(!anonymousMode)} 
-                  />
-                  <span className="slider"></span>
-                </label>
-              </div>
-              <p className="toggle-description">
-                {anonymousMode 
-                  ? "You can chat anonymously with other users" 
-                  : "Turn on to chat without revealing your identity"}
-              </p>
-            </div>
-          </div>
-        )}
-      </main>
-      
-      {/* Bottom Navigation */}
-      <nav className="bottom-nav">
-        <button 
-          className={`nav-item ${activeTab === 'talks' ? 'active' : ''}`}
-          onClick={() => setActiveTab('talks')}
-        >
-          <span className="nav-icon">💬</span>
-          <span className="nav-label">Talks</span>
-        </button>
-        
-        <button 
-          className={`nav-item ${activeTab === 'moments' ? 'active' : ''}`}
-          onClick={() => setActiveTab('moments')}
-        >
-          <span className="nav-icon">📸</span>
-          <span className="nav-label">Moments</span>
-        </button>
-        
-        <button 
-          className={`nav-item ${activeTab === 'search' ? 'active' : ''}`}
-          onClick={() => setActiveTab('search')}
-        >
-          <span className="nav-icon">🔍</span>
-          <span className="nav-label">Search</span>
-        </button>
-        
-        <button 
-          className={`nav-item ${activeTab === 'anonymous' ? 'active' : ''}`}
-          onClick={() => setActiveTab('anonymous')}
-        >
-          <span className="nav-icon">🕶️</span>
-          <span className="nav-label">Anonymous</span>
-        </button>
-        
-        <button 
-          className={`nav-item ${activeTab === 'me' ? 'active' : ''}`}
-          onClick={() => setActiveTab('me')}
-        >
-          <span className="nav-icon">🙋</span>
-          <span className="nav-label">Me</span>
-        </button>
-      </nav>
-    </div>
-  );
-}
-
-// Styles
-const styles = `
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  body {
-    background-color: #f0f2f5;
-    color: #333;
-    line-height: 1.6;
-  }
-  
-  .app {
-    max-width: 500px;
-    margin: 0 auto;
-    background: white;
-    min-height: 100vh;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    overflow-x: hidden;
-  }
-  
-  /* Sign-in Page Styles */
-  .signin-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    padding: 20px;
-  }
-  
-  .signin-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .app-header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .app-header .logo {
-    font-size: 64px;
-    margin-bottom: 10px;
-  }
-  
-  .app-header h1 {
-    font-size: 32px;
-    color: #2d3748;
-    margin-bottom: 10px;
-  }
-  
-  .app-header p {
-    color: #718096;
-    font-size: 16px;
-  }
-  
-  .signin-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #4a5568;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-  }
-  
-  .form-group input:focus {
-    border-color: #4299e1;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-  }
-  
-  .remember {
-    display: flex;
-    align-items: center;
-  }
-  
-  .remember label {
-    margin: 0 0 0 8px;
-  }
-  
-  .signin-button {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .signin-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
-  }
-  
-  .signup-link {
-    text-align: center;
-    margin-top: 20px;
-    color: #718096;
-  }
-  
-  .signup-link a {
-    color: #4299e1;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  
-  .error-message {
-    background: #fed7d7;
-    color: #e53e3e;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 14px;
-  }
-  
-  /* Main App Styles */
-  .main-app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  .app-header {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    padding: 16px 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header-content h1 {
-    font-size: 22px;
-    font-weight: 700;
-  }
-  
-  .header-icons span {
-    margin-left: 15px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  .app-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background-color: #f8f9fa;
-  }
-  
-  .tab-content {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .tab-content h2 {
-    margin-bottom: 20px;
-    color: #2d3748;
-  }
-  
-  .search-bar {
-    display: flex;
-    margin-bottom: 20px;
-  }
-  
-  .search-bar input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 24px 0 0 24px;
-    font-size: 16px;
-  }
-  
-  .search-bar button {
-    background: #4299e1;
-    color: white;
-    border: none;
-    border-radius: 0 24px 24px 0;
-    padding: 0 20px;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  .chat-list {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .chat-item {
-    display: flex;
-    padding: 16px;
-    border-bottom: 1px solid #edf2f7;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .chat-item:hover {
-    background-color: #f7fafc;
-  }
-  
-  .chat-avatar {
-    font-size: 32px;
-    margin-right: 15px;
-    min-width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .chat-info {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .chat-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
-  
-  .chat-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .chat-time {
-    font-size: 12px;
-    color: #a0aec0;
-  }
-  
-  .chat-preview {
-    font-size: 14px;
-    color: #718096;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .unread-count {
-    background: #4299e1;
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 10px;
-  }
-  
-  /* Moments tab */
-  .moments-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-  }
-  
-  .moment-item {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .moment-image {
-    height: 150px;
-    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-  }
-  
-  .moment-meta {
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #718096;
-  }
-  
-  /* Search tab */
-  .search-container {
-    display: flex;
-    margin-bottom: 30px;
-  }
-  
-  .search-container input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 24px 0 0 24px;
-    font-size: 16px;
-  }
-  
-  .search-container button {
-    background: #4299e1;
-    color: white;
-    border: none;
-    border-radius: 0 24px 24px 0;
-    padding: 0 20px;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  .recent-searches h3 {
-    margin-bottom: 15px;
-    font-size: 18px;
-  }
-  
-  .recent-searches ul {
-    list-style: none;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .recent-searches li {
-    padding: 15px 20px;
-    border-bottom: 1px solid #edf2f7;
-    font-size: 16px;
-  }
-  
-  .recent-searches li:last-child {
-    border-bottom: none;
-  }
-  
-  /* Anonymous tab */
-  .anonymous-status {
-    display: flex;
-    justify-content: center;
-    margin: 30px 0;
-  }
-  
-  .status-indicator {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: #e2e8f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    position: relative;
-  }
-  
-  .status-indicator.active {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  }
-  
-  .status-indicator.active::after {
-    content: '🕶️';
-    font-size: 40px;
-  }
-  
-  .start-chat-button {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    border: none;
-    padding: 14px 30px;
-    border-radius: 24px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    display: block;
-    margin: 30px auto 0;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .start-chat-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
-  }
-  
-  /* Me tab */
-  .profile-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .profile-avatar {
-    font-size: 50px;
-    margin-right: 20px;
-    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .profile-info h2 {
-    margin-bottom: 5px;
-  }
-  
-  .profile-info p {
-    color: #48bb78;
-    font-weight: 500;
-  }
-  
-  .profile-stats {
-    display: flex;
-    justify-content: space-around;
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .stat {
-    text-align: center;
-  }
-  
-  .stat strong {
-    display: block;
-    font-size: 24px;
-    color: #2d3748;
-  }
-  
-  .stat span {
-    font-size: 14px;
-    color: #718096;
-  }
-  
-  .profile-menu {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .menu-item {
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    border-bottom: 1px solid #edf2f7;
-  }
-  
-  .menu-item:last-child {
-    border-bottom: none;
-  }
-  
-  .menu-item span {
-    margin-right: 15px;
-    font-size: 20px;
-  }
-  
-  .learn-section {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .anonymous-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0 10px;
-  }
-  
-  .toggle-description {
-    font-size: 14px;
-    color: #718096;
-    margin-top: 10px;
-  }
-  
-  .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-  }
-  
-  .toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 24px;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  input:checked + .slider {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  }
-  
-  input:checked + .slider:before {
-    transform: translateX(26px);
-  }
-  
-  /* Bottom Navigation */
-  .bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    background: white;
-    border-top: 1px solid #e2e8f0;
-    padding: 10px 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-  }
-  
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #a0aec0;
-    font-size: 12px;
-    padding: 8px 12px;
-    transition: color 0.3s;
-  }
-  
-  .nav-item.active {
-    color: #4299e1;
-  }
-  
-  .nav-icon {
-    font-size: 22px;
-    margin-bottom: 4px;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    .app {
-      max-width: 100%;
+    #root {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      overflow-x: hidden;
     }
     
-    .signin-card {
+    /* Sign-in Page Styles */
+    .signin-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
       padding: 20px;
     }
     
+    .signin-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .app-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
     .app-header .logo {
-      font-size: 48px;
+      font-size: 64px;
+      margin-bottom: 10px;
+      color: #6a11cb;
     }
     
     .app-header h1 {
+      font-size: 32px;
+      color: #2d3748;
+      margin-bottom: 10px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    
+    .app-header p {
+      color: #718096;
+      font-size: 16px;
+    }
+    
+    .signin-form {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus {
+      border-color: #4299e1;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    }
+    
+    .remember {
+      display: flex;
+      align-items: center;
+    }
+    
+    .remember label {
+      margin: 0 0 0 8px;
+    }
+    
+    .signin-button {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+    
+    .signin-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+    }
+    
+    .signup-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #718096;
+    }
+    
+    .signup-link a {
+      color: #4299e1;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .error-message {
+      background: #fed7d7;
+      color: #e53e3e;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    /* Main App Styles */
+    .main-app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .app-header {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 16px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header-content h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .header-icons span {
+      margin-left: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .app-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    
+    .tab-content {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .tab-content h2 {
+      margin-bottom: 20px;
+      color: #2d3748;
+      font-weight: 700;
+    }
+    
+    .search-bar {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .search-bar input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px 0 0 24px;
+      font-size: 16px;
+    }
+    
+    .search-bar button {
+      background: #4299e1;
+      color: white;
+      border: none;
+      border-radius: 0 24px 24px 0;
+      padding: 0 20px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    
+    .chat-list {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .chat-item {
+      display: flex;
+      padding: 16px;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .chat-item:hover {
+      background-color: #f7fafc;
+    }
+    
+    .chat-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-right: 15px;
+      color: white;
+    }
+    
+    .chat-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    
+    .chat-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .chat-time {
+      font-size: 12px;
+      color: #a0aec0;
+    }
+    
+    .chat-preview {
+      font-size: 14px;
+      color: #718096;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .unread-count {
+      background: #4299e1;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+    }
+    
+    /* Moments tab */
+    .moments-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .moment-item {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .moment-image {
+      height: 150px;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
       font-size: 24px;
     }
-  }
-`;
+    
+    .moment-meta {
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #718096;
+    }
+    
+    /* Search tab */
+    .search-container {
+      display: flex;
+      margin-bottom: 30px;
+    }
+    
+    .search-container input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px 0 0 24px;
+      font-size: 16px;
+    }
+    
+    .search-container button {
+      background: #4299e1;
+      color: white;
+      border: none;
+      border-radius: 0 24px 24px 0;
+      padding: 0 20px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    
+    .recent-searches h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    
+    .recent-searches ul {
+      list-style: none;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .recent-searches li {
+      padding: 15px 20px;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .recent-searches li i {
+      margin-right: 10px;
+      color: #718096;
+    }
+    
+    .recent-searches li:last-child {
+      border-bottom: none;
+    }
+    
+    /* Anonymous tab */
+    .anonymous-status {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+    }
+    
+    .status-indicator {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    
+    .status-indicator.active {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    }
+    
+    .status-indicator i {
+      font-size: 40px;
+      color: #718096;
+    }
+    
+    .status-indicator.active i {
+      color: white;
+    }
+    
+    .start-chat-button {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: block;
+      margin: 30px auto 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .start-chat-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+    }
+    
+    /* Me tab */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin-right: 20px;
+      color: white;
+    }
+    
+    .profile-info h2 {
+      margin-bottom: 5px;
+      font-size: 22px;
+    }
+    
+    .profile-info p {
+      color: #48bb78;
+      font-weight: 500;
+    }
+    
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      color: #2d3748;
+    }
+    
+    .stat span {
+      font-size: 14px;
+      color: #718096;
+    }
+    
+    .profile-menu {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .menu-item {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+    
+    .menu-item i {
+      margin-right: 15px;
+      font-size: 20px;
+      color: #6a11cb;
+      width: 24px;
+      text-align: center;
+    }
+    
+    .learn-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .anonymous-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0 10px;
+    }
+    
+    .toggle-description {
+      font-size: 14px;
+      color: #718096;
+      margin-top: 10px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      padding: 10px 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #a0aec0;
+      font-size: 12px;
+      padding: 8px 12px;
+      transition: color 0.3s;
+      min-width: 60px;
+    }
+    
+    .nav-item.active {
+      color: #6a11cb;
+    }
+    
+    .nav-icon {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      #root {
+        max-width: 100%;
+      }
+      
+      .signin-card {
+        padding: 20px;
+      }
+      
+      .app-header .logo {
+        font-size: 48px;
+      }
+      
+      .app-header h1 {
+        font-size: 24px;
+      }
+      
+      .chat-avatar {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+      
+      .profile-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-// Add styles to document
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
+  <script type="text/babel">
+    const { useState } = React;
 
-export default App;
+    function App() {
+      const [isLoggedIn, setIsLoggedIn] = useState(false);
+      
+      return (
+        <div className="app">
+          {!isLoggedIn ? (
+            <SignInPage onLogin={() => setIsLoggedIn(true)} />
+          ) : (
+            <MainApp onLogout={() => setIsLoggedIn(false)} />
+          )}
+        </div>
+      );
+    }
+
+    function SignInPage({ onLogin }) {
+      const [username, setUsername] = useState('');
+      const [password, setPassword] = useState('');
+      const [error, setError] = useState('');
+      const [remember, setRemember] = useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        // Simple validation
+        if (!username || !password) {
+          setError('Please enter both username and password');
+          return;
+        }
+        
+        if (password.length < 6) {
+          setError('Password must be at least 6 characters');
+          return;
+        }
+        
+        // Successful login
+        onLogin();
+      };
+
+      return (
+        <div className="signin-container">
+          <div className="signin-card">
+            <div className="app-header">
+              <div className="logo">
+                <i className="fas fa-comment-dots"></i>
+              </div>
+              <h1>ChillChat</h1>
+              <p>Connect with friends and the world around you</p>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="signin-form">
+              {error && <div className="error-message">{error}</div>}
+              
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                />
+              </div>
+              
+              <div className="form-group remember">
+                <input 
+                  type="checkbox" 
+                  id="remember" 
+                  checked={remember} 
+                  onChange={() => setRemember(!remember)} 
+                />
+                <label htmlFor="remember">Remember me</label>
+              </div>
+              
+              <button type="submit" className="signin-button">Sign In</button>
+              
+              <div className="signup-link">
+                Don't have an account? <a href="#">Sign Up</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function MainApp({ onLogout }) {
+      const [activeTab, setActiveTab] = useState('talks');
+      const [anonymousMode, setAnonymousMode] = useState(false);
+      
+      // Sample chat data
+      const chats = [
+        { id: 1, name: 'Alex Johnson', lastMessage: 'Hey, how are you doing?', time: '10:30 AM', unread: 2, avatar: 'AJ' },
+        { id: 2, name: 'Sarah Williams', lastMessage: 'Are we meeting tomorrow?', time: '9:15 AM', unread: 0, avatar: 'SW' },
+        { id: 3, name: 'Mike Chen', lastMessage: 'Sent you the document', time: 'Yesterday', unread: 5, avatar: 'MC' },
+        { id: 4, name: 'Design Team', lastMessage: 'Emily: Final design approved!', time: 'Yesterday', unread: 0, avatar: 'DT' },
+        { id: 5, name: 'Mom', lastMessage: 'Call me when you can', time: 'Mon', unread: 1, avatar: 'M' },
+        { id: 6, name: 'Tech Support', lastMessage: 'Your issue has been resolved', time: 'Sun', unread: 0, avatar: 'TS' },
+        { id: 7, name: 'David Wilson', lastMessage: 'Party at my place this weekend!', time: 'Sat', unread: 3, avatar: 'DW' },
+        { id: 8, name: 'Emma Thompson', lastMessage: 'Thanks for your help!', time: 'Fri', unread: 0, avatar: 'ET' },
+      ];
+
+      return (
+        <div className="main-app">
+          {/* Header */}
+          <header className="app-header">
+            <div className="header-content">
+              <h1>ChillChat</h1>
+              <div className="header-icons">
+                <span><i className="fas fa-bell"></i></span>
+                <span><i className="fas fa-cog"></i></span>
+              </div>
+            </div>
+          </header>
+          
+          {/* Main Content */}
+          <main className="app-content">
+            {activeTab === 'talks' && (
+              <div className="talks-container">
+                <div className="search-bar">
+                  <input type="text" placeholder="Search messages..." />
+                  <button><i className="fas fa-search"></i></button>
+                </div>
+                
+                <div className="chat-list">
+                  {chats.map(chat => (
+                    <div key={chat.id} className="chat-item">
+                      <div className="chat-avatar">{chat.avatar}</div>
+                      <div className="chat-info">
+                        <div className="chat-header">
+                          <h3>{chat.name}</h3>
+                          <span className="chat-time">{chat.time}</span>
+                        </div>
+                        <p className="chat-preview">{chat.lastMessage}</p>
+                      </div>
+                      {chat.unread > 0 && (
+                        <div className="unread-count">{chat.unread}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'moments' && (
+              <div className="tab-content">
+                <h2>Moments</h2>
+                <p>Share photos and updates with your friends</p>
+                <div className="moments-grid">
+                  {[1, 2, 3, 4, 5, 6].map(i => (
+                    <div key={i} className="moment-item">
+                      <div className="moment-image">
+                        <i className="fas fa-image"></i>
+                      </div>
+                      <div className="moment-meta">
+                        <span>Friend {i}</span>
+                        <span>2 hrs ago</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'search' && (
+              <div className="tab-content">
+                <h2>Search</h2>
+                <div className="search-container">
+                  <input type="text" placeholder="Search people, groups, messages..." />
+                  <button><i className="fas fa-search"></i></button>
+                </div>
+                <div className="recent-searches">
+                  <h3>Recent Searches</h3>
+                  <ul>
+                    <li><i className="fas fa-user"></i> Alex Johnson</li>
+                    <li><i className="fas fa-users"></i> Design Team</li>
+                    <li><i className="fas fa-hashtag"></i> Vacation Plans</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'anonymous' && (
+              <div className="tab-content">
+                <h2>Anonymous Chat</h2>
+                <div className="anonymous-status">
+                  {anonymousMode ? (
+                    <div className="active-mode">
+                      <div className="status-indicator active">
+                        <i className="fas fa-user-secret"></i>
+                      </div>
+                      <p>You are chatting anonymously</p>
+                    </div>
+                  ) : (
+                    <div className="inactive-mode">
+                      <div className="status-indicator">
+                        <i className="fas fa-user"></i>
+                      </div>
+                      <p>Anonymous mode is off</p>
+                    </div>
+                  )}
+                </div>
+                <p>Start a private conversation without revealing your identity.</p>
+                <button className="start-chat-button">
+                  {anonymousMode ? 'Find New Chat' : 'Start Anonymous Chat'}
+                </button>
+              </div>
+            )}
+            
+            {activeTab === 'me' && (
+              <div className="tab-content">
+                <div className="profile-header">
+                  <div className="profile-avatar">JD</div>
+                  <div className="profile-info">
+                    <h2>John Doe</h2>
+                    <p><i className="fas fa-circle" style={{fontSize: '10px', color: '#48bb78'}}></i> Online now</p>
+                  </div>
+                </div>
+                
+                <div className="profile-stats">
+                  <div className="stat">
+                    <strong>42</strong>
+                    <span>Friends</span>
+                  </div>
+                  <div className="stat">
+                    <strong>128</strong>
+                    <span>Chats</span>
+                  </div>
+                  <div className="stat">
+                    <strong>24</strong>
+                    <span>Moments</span>
+                  </div>
+                </div>
+                
+                <div className="profile-menu">
+                  <div className="menu-item">
+                    <i className="fas fa-user-circle"></i> My Account
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-users"></i> Friends
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-bell"></i> Notifications
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-lock"></i> Privacy
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-book"></i> Learn
+                  </div>
+                  <div className="menu-item">
+                    <i className="fas fa-question-circle"></i> Help & Support
+                  </div>
+                </div>
+                
+                <div className="learn-section">
+                  <h3>Learn</h3>
+                  <div className="anonymous-toggle">
+                    <span>Anonymous Chat</span>
+                    <label className="toggle-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={anonymousMode} 
+                        onChange={() => setAnonymousMode(!anonymousMode)} 
+                      />
+                      <span className="slider"></span>
+                    </label>
+                  </div>
+                  <p className="toggle-description">
+                    {anonymousMode 
+                      ? "You can chat anonymously with other users" 
+                      : "Turn on to chat without revealing your identity"}
+                  </p>
+                </div>
+              </div>
+            )}
+          </main>
+          
+          {/* Bottom Navigation */}
+          <nav className="bottom-nav">
+            <button 
+              className={`nav-item ${activeTab === 'talks' ? 'active' : ''}`}
+              onClick={() => setActiveTab('talks')}
+            >
+              <span className="nav-icon"><i className="fas fa-comment-alt"></i></span>
+              <span className="nav-label">Talks</span>
+            </button>
+            
+            <button 
+              className={`nav-item ${activeTab === 'moments' ? 'active' : ''}`}
+              onClick={() => setActiveTab('moments')}
+            >
+              <span className="nav-icon"><i className="fas fa-camera"></i></span>
+              <span className="nav-label">Moments</span>
+            </button>
+            
+            <button 
+              className={`nav-item ${activeTab === 'search' ? 'active' : ''}`}
+              onClick={() => setActiveTab('search')}
+            >
+              <span className="nav-icon"><i className="fas fa-search"></i></span>
+              <span className="nav-label">Search</span>
+            </button>
+            
+            <button 
+              className={`nav-item ${activeTab === 'anonymous' ? 'active' : ''}`}
+              onClick={() => setActiveTab('anonymous')}
+            >
+              <span className="nav-icon"><i className="fas fa-user-secret"></i></span>
+              <span className="nav-label">Anonymous</span>
+            </button>
+            
+            <button 
+              className={`nav-item ${activeTab === 'me' ? 'active' : ''}`}
+              onClick={() => setActiveTab('me')}
+            >
+              <span className="nav-icon"><i className="fas fa-user"></i></span>
+              <span className="nav-label">Me</span>
+            </button>
+          </nav>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
